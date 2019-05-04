@@ -21,7 +21,12 @@ class UserModel {
                 userName: String,
                 password: String,
                 emailAddress: String,
+<<<<<<< HEAD
             }, {collection: "user"}
+=======
+                userType: Number,
+            }, {collection: 'user'}
+>>>>>>> 2dda9e54f99bfdf8e9f1de60aa01ab48eba72a7e
         );
     }
 
