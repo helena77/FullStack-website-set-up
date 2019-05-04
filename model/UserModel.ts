@@ -1,6 +1,6 @@
 import Mongoose = require("mongoose");
-import {DataAccess} from "../DataAccess";
-import {IUserModel} from "../interfaces/IUserModel";
+import {DataAccess} from '../DataAccess';
+import {IUserModel} from '../interfaces/IUserModel';
 
 let mongooseConnection = DataAccess.mongooseConnection;
 let mongooseObj = DataAccess.mongooseInstance;
@@ -21,7 +21,12 @@ class UserModel {
                 userName: String,
                 password: String,
                 emailAddress: String,
-            }, {collection: 'user'}
+                userType: Number,
+            }, {collection: "user"}
+        );
+    }
+
+    public createModel(): void {
         this.model = mongooseConnection.model<IUserModel>("user", this.schema);
     }
 
