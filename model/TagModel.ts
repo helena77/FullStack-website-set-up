@@ -27,7 +27,7 @@ class TagModel {
         this.model = mongooseConnection.model<ITagModel>("tag", this.schema);
     }
 
-    public createTag(response:any, tag: any): void {
+    public createTag(response:any, tag: any): any {
         var find: boolean = this.model.find(tag);
         if (find) {
             response.send("Tag has already existed!");
@@ -55,8 +55,8 @@ class TagModel {
         });
     }
 
-    public updateTagByTagID(response:any, tagId: number): any {
-        this.model.findOneAndUpdate(tagId, { new: true }, (err: any, newTag: any) => {
+    public updateTagByTagID(response:any, tagId: number, tagBody: any): any {
+        this.model.findOneAndUpdate(tagId, tagBody, { new: true }, (err: any, newTag: any) => {
             if(err) {
                 response.send(err);
             }
@@ -64,7 +64,7 @@ class TagModel {
         });
     }
 
-    public deleteTagByAdminByTagID(response:any, adminId: number, tagId: number): any {
+    public deleteTagByTagIDByAdmin(response:any, adminId: number, tagId: number): any {
         this.model.remove(adminId, tagId, (err: any) => {
             if(err) {
                 response.send(err);

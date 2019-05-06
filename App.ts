@@ -4,6 +4,8 @@ import * as logger from "morgan";
 import * as bodyParser from "body-parser";
 import { Router } from "express-serve-static-core";
 import { FoodieRoute } from "./route/UserRoute";
+import { FoodieTagListRoute } from "./route/FoodieTagListRoute";
+import { TagRoute } from "./route/TagRoute";
 
 
 // creates and configures an ExpressJS web server.
@@ -42,6 +44,10 @@ class App {
     private addRoutes(router: Router): void{
         var foodie: any = new FoodieRoute();
         foodie.registerRoutes(router);
+        var foodieTagList: any = new FoodieTagListRoute();
+        foodieTagList.registerRoutes(router);
+        var tag: any = new TagRoute();
+        tag.registerRoutes(router);
     }
 
 }

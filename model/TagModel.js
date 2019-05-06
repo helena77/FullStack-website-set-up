@@ -44,15 +44,15 @@ var TagModel = /** @class */ (function () {
             response.json(tag);
         });
     };
-    TagModel.prototype.updateTagByTagID = function (response, tagId) {
-        this.model.findOneAndUpdate(tagId, { "new": true }, function (err, newTag) {
+    TagModel.prototype.updateTagByTagID = function (response, tagId, tagBody) {
+        this.model.findOneAndUpdate(tagId, tagBody, { "new": true }, function (err, newTag) {
             if (err) {
                 response.send(err);
             }
             response.json(newTag);
         });
     };
-    TagModel.prototype.deleteTagByAdminByTagID = function (response, adminId, tagId) {
+    TagModel.prototype.deleteTagByTagIDByAdmin = function (response, adminId, tagId) {
         this.model.remove(adminId, tagId, function (err) {
             if (err) {
                 response.send(err);
