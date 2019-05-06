@@ -3,38 +3,40 @@ exports.__esModule = true;
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
-//var MongoClient = require('mongodb').MongoClient;
-//var Q = require('q');
-//connect to the model 
-var UserModel_1 = require("./model/UserModel");
-// Creates and configures an ExpressJS web server.
+var UserRoute_1 = require("./route/UserRoute");
+var FoodieTagListRoute_1 = require("./route/FoodieTagListRoute");
+var TagRoute_1 = require("./route/TagRoute");
+// creates and configures an ExpressJS web server.
 var App = /** @class */ (function () {
-    //Run configuration methods on the Express instance.
+    // run configuration methods on the Express instance.
     function App() {
         this.expressApp = express();
         this.middleware();
         this.routes();
-        this.idGenerator = 100;
-        this.Users = new UserModel_1.UserModel();
     }
-    // Configure Express middleware.
+    // configure Express middleware.
     App.prototype.middleware = function () {
-        this.expressApp.use(logger('dev'));
+        this.expressApp.use(logger("dev"));
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     };
-    // Configure API endpoints.
+    // configure API endpoints.
     App.prototype.routes = function () {
-        var _this = this;
         var router = express.Router();
-        router.get('/users', function (req, res) {
-            console.log('Query All list');
-            _this.Users.retrieveAllUsers(res);
-        });
-        this.expressApp.use('/', router);
-        this.expressApp.use('/app/json/', express.static(__dirname + '/app/json'));
-        this.expressApp.use('/images', express.static(__dirname + '/img'));
-        this.expressApp.use('/', express.static(__dirname + '/pages'));
+        // add user routes
+        this.addRoutes(router);
+        this.expressApp.use("/", router);
+        this.expressApp.use("/app/json/", express.static(__dirname + "/app/json"));
+        this.expressApp.use("/images", express.static(__dirname + "/img"));
+        this.expressApp.use("/", express.static(__dirname + "/pages"));
+    };
+    App.prototype.addRoutes = function (router) {
+        var foodie = new UserRoute_1.FoodieRoute();
+        foodie.registerRoutes(router);
+        var foodieTagList = new FoodieTagListRoute_1.FoodieTagListRoute();
+        foodieTagList.registerRoutes(router);
+        var tag = new TagRoute_1.TagRoute();
+        tag.registerRoutes(router);
     };
     return App;
 }());
