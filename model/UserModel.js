@@ -104,11 +104,10 @@ var UserModel = /** @class */ (function () {
         return deferred.promise;
     };
     // for each user they need to provide their userID and the updated body to UPDATE themselves
-    UserModel.prototype.updateUserByID = function (_a) {
-        var userID = _a.userID, body = _a.body;
+    UserModel.prototype.updateUserByID = function (userId, body) {
         var deferred = Q.defer();
         var res = false;
-        this.model.findOneAndUpdate(userID, body, { "new": true }, function (err, user) {
+        this.model.findOneAndUpdate(userId, body, { "new": true }, function (err, user) {
             if (err) {
                 console.error(err);
             }
@@ -249,6 +248,30 @@ var AdminModel = /** @class */ (function (_super) {
         }
         else {
             query = this.model.find({ userType: ownerType });
+            query.exec(function (err, res) {
+                if (err) {
+                    console.error(err);
+                }
+                else if (res.length > 0) {
+                    users = res;
+                }
+                else {
+                    console.log("no result");
+                }
+                deferred.resolve(users);
+            });
+        }
+        return deferred.promise;
+    };
+    AdminModel.prototype.getAllAdmins = function (adminType) {
+        var deferred = Q.defer();
+        var query;
+        var users;
+        if (adminType !== 3) {
+            console.error("Wrong user type");
+        }
+        else {
+            query = this.model.find({ userType: adminType });
             query.exec(function (err, res) {
                 if (err) {
                     console.error(err);

@@ -4,6 +4,7 @@ import { IFoodieTagListModel } from "../interfaces/IFoodieTagListModel";
 
 let mongooseConnection: Mongoose.Connection = DataAccess.mongooseConnection;
 let mongooseObj: any = DataAccess.mongooseInstance;
+var Q: any = require("q");
 
 class FoodieTagListModel {
     public schema: any;
@@ -60,7 +61,7 @@ class FoodieTagListModel {
         });
     }
 
-    public deleteTagListByAdminByFoodieID(response:any, adminId: number, foodieId: number): any {
+    public deleteTagListByFoodieIDByAdmin(response:any, adminId: number, foodieId: number): any {
         this.model.remove(adminId, foodieId, (err: any) => {
             if(err) {
                 response.send(err);

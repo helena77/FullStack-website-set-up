@@ -4,6 +4,7 @@ var Mongoose = require("mongoose");
 var DataAccess_1 = require("./../DataAccess");
 var mongooseConnection = DataAccess_1.DataAccess.mongooseConnection;
 var mongooseObj = DataAccess_1.DataAccess.mongooseInstance;
+var Q = require("q");
 var FoodieTagListModel = /** @class */ (function () {
     function FoodieTagListModel() {
         this.createSchema();
@@ -49,7 +50,7 @@ var FoodieTagListModel = /** @class */ (function () {
             response.json(newTagList);
         });
     };
-    FoodieTagListModel.prototype.deleteTagListByAdminByFoodieID = function (response, adminId, foodieId) {
+    FoodieTagListModel.prototype.deleteTagListByFoodieIDByAdmin = function (response, adminId, foodieId) {
         this.model.remove(adminId, foodieId, function (err) {
             if (err) {
                 response.send(err);
