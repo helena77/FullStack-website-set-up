@@ -96,10 +96,10 @@ abstract class UserModel {
     }
 
     // for each user they need to provide their userID and the updated body to UPDATE themselves
-    public updateUserByID({userID, body }: {userID: number; body: any; }): any {
+    public updateUserByID(userId: number, body: any): any {
         var deferred: any = Q.defer();
         var res: any = false;
-        this.model.findOneAndUpdate(userID, body, { new: true }, (err: any, user: any) => {
+        this.model.findOneAndUpdate(userId, body, { new: true }, (err: any, user: any) => {
             if(err) {
                 console.error(err);
             } else {
@@ -269,6 +269,28 @@ class AdminModel extends UserModel {
             console.error("Wrong user type");
         } else {
             query = this.model.find({userType: ownerType});
+            query.exec((err: any, res: IUserModel[]) => {
+                if(err) {
+                    console.error(err);
+                } else if (res.length > 0) {
+                    users = res;
+                } else {
+                    console.log("no result");
+                }
+                deferred.resolve(users);
+            });
+        }
+        return deferred.promise;
+    }
+
+    public getAllAdmins(adminType: number): IUserModel[] {
+        var deferred: any = Q.defer();
+        var query: any;
+        var users : IUserModel[];
+        if (adminType !== 3) {
+            console.error("Wrong user type");
+        } else {
+            query = this.model.find({userType: adminType});
             query.exec((err: any, res: IUserModel[]) => {
                 if(err) {
                     console.error(err);
