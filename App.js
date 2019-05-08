@@ -33,6 +33,10 @@ var App = /** @class */ (function () {
     App.prototype.addRoutes = function (router) {
         var foodie = new UserRoute_1.FoodieRoute();
         foodie.registerRoutes(router);
+        var restaurantOwner = new UserRoute_1.RestaurantOwnerRoute();
+        restaurantOwner.registerRoutes(router);
+        var admin = new UserRoute_1.AdminRoute();
+        admin.registerRoutes(router);
         var foodieTagList = new FoodieTagListRoute_1.FoodieTagListRoute();
         foodieTagList.registerRoutes(router);
         var tag = new TagRoute_1.TagRoute();

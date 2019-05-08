@@ -3,7 +3,7 @@ import * as express from "express";
 import * as logger from "morgan";
 import * as bodyParser from "body-parser";
 import { Router } from "express-serve-static-core";
-import { FoodieRoute } from "./route/UserRoute";
+import { FoodieRoute, RestaurantOwnerRoute, AdminRoute } from "./route/UserRoute";
 import { FoodieTagListRoute } from "./route/FoodieTagListRoute";
 import { TagRoute } from "./route/TagRoute";
 
@@ -41,9 +41,13 @@ class App {
         this.expressApp.use("/", express.static(__dirname+"/pages"));
     }
 
-    private addRoutes(router: Router): void{
+    private addRoutes(router: Router): void {
         var foodie: any = new FoodieRoute();
         foodie.registerRoutes(router);
+        var restaurantOwner: any = new RestaurantOwnerRoute();
+        restaurantOwner.registerRoutes(router);
+        var admin: any = new AdminRoute();
+        admin.registerRoutes(router);
         var foodieTagList: any = new FoodieTagListRoute();
         foodieTagList.registerRoutes(router);
         var tag: any = new TagRoute();

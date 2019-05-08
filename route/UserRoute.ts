@@ -1,9 +1,4 @@
-import * as path from "path";
 import * as express from "express";
-import * as logger from "morgan";
-import * as mongodb from "mongodb";
-import * as url from "url";
-import * as bodyParser from "body-parser";
 import { FoodieModel, RestaurantOwnerModel, AdminModel } from "../model/UserModel";
 import { Router } from "express-serve-static-core";
 import { IUserModel } from "../interfaces/IUserModel";
@@ -25,51 +20,43 @@ class FoodieRoute {
     }
 
     // configure API endpoints.
-    private routes(router: Router): void {
-        // get unauthenticated page before log in
-        router.get("/", async (req, res) => {
-            res.status(200).send();
+    private routes(router: Router): void {       
+        // create foodie
+        router.post("/foodie", (req, res) => {
+            console.log(req.body);
+            var user: any = req.body;
+            this.Foodie.createUser(res, user);
         });
 
         // get login page
-        router.get("/login", async (req, res) => {
+        router.get("/login", (req, res) => {
             var userPayload: any = req;
-            var user: any = await this.Foodie.logInByIDAndPassword(userPayload);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("login with userID: ", userPayload.userID);
+            console.log("login with userPassword: ", userPayload.password);
+            this.Foodie.logInByIDAndPassword(res, userPayload);
         });
 
-        // create foodie
-        router.post("/foodie", async (req, res) => {
-            var user: any = req.body;
-            var successOrNot: boolean = await this.Foodie.createUser(user);
-            console.log("in create route:", successOrNot);
-            res.status(200).send(successOrNot);
-        });
 
         // get foodie by id
-        router.get("/foodie/:userID", async (req, res) => {
+        router.get("/foodie/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Foodie.getUserByID(userId);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("Query single user with id: ", userId);
+            this.Foodie.getUserByID(res, userId);
         });
 
         // update foodie by id
-        router.put("/foodie/:userID",async (req, res) => {
+        router.put("/foodie/:userID", (req, res) => {
             var userId: any = req.params.userID;
             var userBody: any = req.body;
-            var successOrNot: boolean = await this.Foodie.updateUserByID(userId, userBody);
-            console.log("in update route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("update user: ", userId);
+            this.Foodie.updateUserByID(res, userId, userBody);
         });
 
         // delete foodie by id
-        router.delete("/foodie/:userID",async (req, res) => {
+        router.delete("/foodie/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Foodie.deleteUserByID(userId);
-            console.log("in delete route:", user);
-            res.status(200).send(user);
+            console.log("Delete user:", userId);
+            this.Foodie.deleteUserByID(res, userId);
         });
     }
 }
@@ -90,50 +77,41 @@ class RestaurantOwnerRoute {
 
     // configure API endpoints.
     private routes(router: Router): void {
-        // get unauthenticated page before log in
-        router.get("/", async (req, res) => {
-            res.status(200).send();
+        // create restaurantOwner
+        router.post("/restaurantOwner", (req, res) => {
+            console.log(req.body);
+            var user: any = req.body;
+            this.Owner.createUser(res, user);
         });
 
         // get login page
-        router.get("/login", async (req, res) => {
+        router.get("/login", (req, res) => {
             var userPayload: any = req;
-            var user: any = await this.Owner.logInByIDAndPassword(userPayload);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("login with userID: ", userPayload.userID);
+            console.log("login with userPassword: ", userPayload.password);
+            this.Owner.logInByIDAndPassword(res, userPayload);
         });
 
-        // create foodie
-        router.post("/restaurantOwner", async (req, res) => {
-            var user: any = req.body;
-            var successOrNot: boolean = await this.Owner.createUser(user);
-            console.log("in create route:", successOrNot);
-            res.status(200).send(successOrNot);
-        });
-
-        // get foodie by id
-        router.get("/restaurantOwner/:userID", async (req, res) => {
+        // get restaurantOwner by id
+        router.get("/restaurantOwner/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Owner.getUserByID(userId);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("Query single user with id: ", userId);
+            this.Owner.getUserByID(res, userId);
         });
 
-        // update foodie by id
-        router.put("/restaurantOwner/:userID",async (req, res) => {
+        // update restaurantOwner by id
+        router.put("/restaurantOwner/:userID", (req, res) => {
             var userId: any = req.params.userID;
             var userBody: any = req.body;
-            var successOrNot: boolean = await this.Owner.updateUserByID(userId, userBody);
-            console.log("in update route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("update user: ", userId);
+            this.Owner.updateUserByID(res, userId, userBody);
         });
 
-        // delete foodie by id
-        router.delete("/restaurantOwner/:userID",async (req, res) => {
+        // delete restaurantOwner by id
+        router.delete("/restaurantOwner/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Owner.deleteUserByID(userId);
-            console.log("in delete route:", user);
-            res.status(200).send(user);
+            console.log("Delete user:", userId);
+            this.Owner.deleteUserByID(res, userId);
         });
     }
 }
@@ -154,101 +132,82 @@ class AdminRoute {
 
     // configure API endpoints.
     private routes(router: Router): void {
-        // get unauthenticated page before log in
-        router.get("/", async (req, res) => {
-            res.status(200).send();
+        // create admin
+        router.post("/admin", (req, res) => {
+            console.log(req.body);
+            var user: any = req.body;
+            this.Admin.createUser(res, user);
         });
 
         // get login page
-        router.get("/login", async (req, res) => {
+        router.get("/login", (req, res) => {
             var userPayload: any = req;
-            var user: any = await this.Admin.logInByIDAndPassword(userPayload);
-            console.log("in get route:", user);
-            res.status(200).send(user);
-        });
-
-        // create admin
-        router.post("/admin", async (req, res) => {
-            var user: any = req.body;
-            var successOrNot: boolean = await this.Admin.createUser(user);
-            console.log("in create route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("login with userID: ", userPayload.userID);
+            console.log("login with userPassword: ", userPayload.password);
+            this.Admin.logInByIDAndPassword(res, userPayload);
         });
 
         // get all users
-        router.get("/admin/users", async (req, res) => {
+        router.get("/admin/users", (req, res) => {
             console.log("get all users");
-            var users: IUserModel[] = await this.Admin.getAllUsers();
-            console.log("get all users finished");
-            res.status(200).send(users);
+            this.Admin.getAllUsers(res);
         });
 
         // get all foodies
-        router.get("/admin/foodies", async (req, res) => {
-            console.log("get all foodies");
-            var foodieType: number = req.params.userType;
-            var foodies: IFoodieModel[] = await this.Admin.getAllFoodies(foodieType);
-            console.log("get all foodies finished");
-            res.status(200).send(foodies);
+        router.get("/admin/foodies", (req, res) => {
+            var userType: any = req.params.userType;
+            console.log("Get all foodies: ", userType);
+            this.Admin.getAllFoodies(res, userType);
         });
 
         // get foodie by id
-        router.get("/admin/foodies/:userID", async (req, res) => {
+        router.get("/admin/foodies/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Admin.getUserByID(userId);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("Query single foodie with id: ", userId);
+            this.Admin.getUserByID(res, userId);
         });
 
         // get all restaurantOwners
-        router.get("/admin/restaurantOwners", async (req, res) => {
-            console.log("get all restaurantOwners");
-            var ownerType: number = req.params.userType;
-            var owners: IUserModel[] = await this.Admin.getAllRestaurantOwners(ownerType);
-            console.log("get all foodies finished");
-            res.status(200).send(owners);
+        router.get("/admin/restaurantOwners", (req, res) => {
+            var userType: any = req.params.userType;
+            console.log("Get all restaurantOwners: ", userType);
+            this.Admin.getAllRestaurantOwners(res, userType);
         });
 
         // get restaurantOwner by id
-        router.get("/admin/restaurantOwners/:userID", async (req, res) => {
+        router.get("/admin/restaurantOwners/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Admin.getUserByID(userId);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("Query single restaurantOwner with id: ", userId);
+            this.Admin.getUserByID(res, userId);
         });
 
         // get all admins
-        router.get("/admin/admins", async (req, res) => {
-            console.log("get all admins");
-            var adminType: number = req.params.userType;
-            var admins: IUserModel[] = await this.Admin.getAllAdmins(adminType);
-            console.log("get all foodies finished");
-            res.status(200).send(admins);
+        router.get("/admin/admins", (req, res) => {
+            var userType: any = req.params.userType;
+            console.log("Get all admins: ", userType);
+            this.Admin.getAllAdmins(res, userType);
         });
 
         // get admin by id
-        router.get("/admin/:userID", async (req, res) => {
+        router.get("/admin/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Admin.getUserByID(userId);
-            console.log("in get route:", user);
-            res.status(200).send(user);
+            console.log("Query single admin with id: ", userId);
+            this.Admin.getUserByID(res, userId);
         });
 
         // update admin by id
-        router.put("/admin/:userID",async (req, res) => {
+        router.put("/admin/:userID", (req, res) => {
             var userId: any = req.params.userID;
             var userBody: any = req.body;
-            var successOrNot: boolean = await this.Admin.updateUserByID(userId, userBody);
-            console.log("in update route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("update user: ", userId);
+            this.Admin.updateUserByID(res, userId, userBody);
         });
 
         // delete admin by id
-        router.delete("/admin/:userID",async (req, res) => {
+        router.delete("/admin/:userID", (req, res) => {
             var userId: any = req.params.userID;
-            var user: any = await this.Admin.deleteUserByID(userId);
-            console.log("in delete route:", user);
-            res.status(200).send(user);
+            console.log("Delete user:", userId);
+            this.Admin.deleteUserByID(res, userId);
         });
     }
 }
