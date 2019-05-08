@@ -4,7 +4,7 @@ import { IFoodieTagListModel } from "../interfaces/IFoodieTagListModel";
 
 let mongooseConnection: Mongoose.Connection = DataAccess.mongooseConnection;
 let mongooseObj: any = DataAccess.mongooseInstance;
-var Q: any = require("q");
+
 
 class FoodieTagListModel {
     public schema: any;
@@ -40,68 +40,61 @@ class FoodieTagListModel {
         this.model = mongooseConnection.model<IFoodieTagListModel>("foodieTagList", this.schema);
     }
 
-    public createTagList(tagList: any): any {
-        var deferred: any = Q.defer();
-        var res: boolean = false;
-        this.model(tagList).save(function (err: any): any {
+    public createTagList(response: any, tagList: any): any {
+        this.model(tagList).save((err: any, newTagList: any) => {
             if(err) {
-                console.error(err);
-            } else {
-                res = true;
+                response.send(err);
             }
-            deferred.resolve(res);
+            response.json(newTagList);
         });
-        return deferred.promise;
-
     }
 
-    public getTagListByFoodieID(userId: number): any {
-        var deferred: any = Q.defer();
-        var query: any = this.model.find({userID: userId});
-        var list: any = null;
-        query.exec((err: any, lists: any) => {
+    public getAllTagLists(response:any): any {
+        var query: any = this.model.find({});
+        query.exec( (err: any, tagLists: any) => {
             if(err) {
-                console.error(err);
-            } else if (lists.length > 1) {
-                console.error("Duplicate error in list");
-            } else if (lists.length === 1) {
-                for (let l of lists){
-                    list = l;
-                }
-            } else {
-                console.log("no result");
+                response.send(err);
             }
-            deferred.resolve(list);
+            response.json(tagLists);
         });
-        return deferred.promise;
     }
 
-    public updateTagListByFoodieID(userId: number, tagList: any): any {
-        var deferred: any = Q.defer();
-        var res: any = false;
-        this.model.findOneAndUpdate({userID: userId}, tagList, { new: true }, function(err: any): any {
+    public getTagListByFoodieID(response: any, userId: number): any {
+        var query: any = this.model.findOne({userID: userId});
+        query.exec( (err: any, tag: any) => {
             if(err) {
-                console.error(err);
-            } else {
-                res = true;
+                response.send(err);
             }
-            deferred.resolve(res);
+            response.json(tag);
         });
-        return deferred.promise;
     }
 
-    public deleteTagListByFoodieIDByAdmin(foodieId: number): any {
-        var deferred: any = Q.defer();
-        var res: any = false;
-        this.model.deleteOne({userID: foodieId}, function(err: any): any{
+    public getTagListByListID(response: any, listId: number): any {
+        var query: any = this.model.findOne({tagListID: listId});
+        query.exec( (err: any, list: any) => {
             if(err) {
-                console.error(err);
-            } else {
-                res = true;
+                response.send(err);
             }
-            deferred.resolve(res);
+            response.json(list);
         });
-        return deferred.promise;
+    }
+
+    public updateTagListByFoodieID(response: any, userId: number, tagList: any): any {
+        this.model.findOneAndUpdate({userID: userId}, tagList, { new: true }, (err: any, newTagList: any) => {
+            if(err) {
+                response.send(err);
+            }
+            response.json(newTagList);
+        });
+    }
+
+    public deleteTagListByFoodieID(response: any, foodieId: number): any {
+        this.model.remove({userID: foodieId}, (err: any) => {
+            if(err) {
+                response.send(err);
+            }
+            response.json({ message: "Successfully deleted " + foodieId + "'s tagList"});
+        });
     }
 }
 export {FoodieTagListModel};

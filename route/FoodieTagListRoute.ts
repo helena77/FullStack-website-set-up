@@ -1,9 +1,4 @@
-import * as path from "path";
 import * as express from "express";
-import * as logger from "morgan";
-import * as mongodb from "mongodb";
-import * as url from "url";
-import * as bodyParser from "body-parser";
 import { Router } from "express-serve-static-core";
 import { FoodieTagListModel } from "../model/FoodieTagListModel";
 
@@ -25,36 +20,45 @@ class FoodieTagListRoute {
     // configure API endpoints.
     private routes(router: Router): void {
         // create TagList
-        router.post("/tagList", async (req, res) => {
+        router.post("/tagList", (req, res) => {
             var list: any = req.body;
-            var successOrNot: boolean = await this.TagList.createTagList(list);
-            console.log("in create route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log(list);
+            this.TagList.createTagList(res, list);
+        });
+
+        // get all list
+        router.get("/tagList", (res) => {
+            console.log("get all tags");
+            this.TagList.getAllTagLists(res);
         });
 
         // get list by userId
-        router.get("/tagList/:userID", async (req, res) => {
+        router.get("/tagList/:userID", (req, res) => {
             var userId: number = req.params.userID;
-            var list: any = await this.TagList.getTagListByFoodieID(userId);
-            console.log("in get route:", list);
-            res.status(200).send(list);
+            console.log("get foodieTagList by userId:", userId);
+            this.TagList.getTagListByFoodieID(res, userId);
+        });
+
+        // get list by listId
+        router.get("/tagList/:listId", (req, res) => {
+            var listId: number = req.params.tagListID;
+            console.log("get foodieTagList by listId:", listId);
+            this.TagList.getTagListByListID(res, listId);
         });
 
         // update list by userId
-        router.put("/tagList/:userID", async (req, res) => {
+        router.put("/tagList/:userID",  (req, res) => {
             var userId: number = req.params.userID;
             var listBody: any = req.body;
-            var successOrNot: boolean = await this.TagList.updateTagListByFoodieID(userId, listBody);
-            console.log("in update route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("update taglist by userID:", userId);
+            this.TagList.updateTagListByFoodieID(res, userId, listBody);
         });
 
         // delete list by userId
-        router.delete("/tagList/:userID",async (req, res) => {
-            var foodieId: number = req.params.foodieId;
-            var user: any = await this.TagList.deleteTagListByFoodieIDByAdmin(foodieId);
-            console.log("in delete route:", user);
-            res.status(200).send(user);
+        router.delete("/tagList/:userID", (req, res) => {
+            var userId: number = req.params.userID;
+            console.log("delete tagList by userID:", userId);
+            this.TagList.deleteTagListByFoodieID(res, userId);
         });
     }
 }
