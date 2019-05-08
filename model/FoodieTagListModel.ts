@@ -18,11 +18,20 @@ class FoodieTagListModel {
     public createSchema(): void {
         this.schema = new Mongoose.Schema(
             {
-                tagListID: Number,
-                userID: Number,
-                tagList: [{
-                tagID: Number,
-                }],
+                tagListID: {
+                    type: Number,
+                    required: true,
+                    unique : true,
+                },
+                userID: {
+                    type: Number,
+                    required: true,
+                    unique : true,
+                },
+                tagList: {
+                    type: [Number],
+                    required: true,
+                },
             }, {collection: "foodieTagList"}
         );
     }
@@ -31,43 +40,68 @@ class FoodieTagListModel {
         this.model = mongooseConnection.model<IFoodieTagListModel>("foodieTagList", this.schema);
     }
 
-    public createTagList(response:any, payload: any): any {
-        var find: boolean = this.model.find(payload.userID);
-        if (find) {
-            response.send("You have already have a tag list!");
-        } else {
-            this.model.save(payload, (err: any, newTagList: any) => {
-                if(err) {
-                    response.send(err);
+    public createTagList(tagList: any): any {
+        var deferred: any = Q.defer();
+        var res: boolean = false;
+        this.model(tagList).save(function (err: any): any {
+            if(err) {
+                console.error(err);
+            } else {
+                res = true;
+            }
+            deferred.resolve(res);
+        });
+        return deferred.promise;
+
+    }
+
+    public getTagListByFoodieID(userId: number): any {
+        var deferred: any = Q.defer();
+        var query: any = this.model.find({userID: userId});
+        var list: any = null;
+        query.exec((err: any, lists: any) => {
+            if(err) {
+                console.error(err);
+            } else if (lists.length > 1) {
+                console.error("Duplicate error in list");
+            } else if (lists.length === 1) {
+                for (let l of lists){
+                    list = l;
                 }
-                response.json(newTagList);
-            });
-        }
-    }
-
-    public getTagListByFoodieID(response:any, userId: number): any {
-        var query: any = this.model.findOne(userId);
-        query.exec( (err: any, list: any) => {
-            response.json(list);
-        });
-    }
-
-    public updateTagListByFoodieID(response:any, userId: number, tagList: any): any {
-        this.model.findOneAndUpdate(userId, tagList, { new: true }, (err: any, newTagList: any) => {
-            if(err) {
-                response.send(err);
+            } else {
+                console.log("no result");
             }
-            response.json(newTagList);
+            deferred.resolve(list);
         });
+        return deferred.promise;
     }
 
-    public deleteTagListByFoodieIDByAdmin(response:any, adminId: number, foodieId: number): any {
-        this.model.remove(adminId, foodieId, (err: any) => {
+    public updateTagListByFoodieID(userId: number, tagList: any): any {
+        var deferred: any = Q.defer();
+        var res: any = false;
+        this.model.findOneAndUpdate({userID: userId}, tagList, { new: true }, function(err: any): any {
             if(err) {
-                response.send(err);
+                console.error(err);
+            } else {
+                res = true;
             }
-            response.json({ message: "Successfully deleted " + foodieId + "'s tagList!"});
+            deferred.resolve(res);
         });
+        return deferred.promise;
+    }
+
+    public deleteTagListByFoodieIDByAdmin(foodieId: number): any {
+        var deferred: any = Q.defer();
+        var res: any = false;
+        this.model.deleteOne({userID: foodieId}, function(err: any): any{
+            if(err) {
+                console.error(err);
+            } else {
+                res = true;
+            }
+            deferred.resolve(res);
+        });
+        return deferred.promise;
     }
 }
 export {FoodieTagListModel};

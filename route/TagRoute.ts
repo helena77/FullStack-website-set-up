@@ -1,13 +1,6 @@
-import * as path from "path";
 import * as express from "express";
-import * as logger from "morgan";
-import * as mongodb from "mongodb";
-import * as url from "url";
-import * as bodyParser from "body-parser";
 import { Router } from "express-serve-static-core";
 import { TagModel } from "../model/TagModel";
-import { ITagModel } from "../interfaces/ITagModel";
-
 
 // creates and configures an ExpressJS web server.
 class TagRoute {
@@ -26,45 +19,38 @@ class TagRoute {
     // configure API endpoints.
     private routes(router: Router): void {
         // create Tag
-        router.post("/tag/createTag", async (req, res) => {
+        router.post("/tag", (req, res) => {
+            console.log(req.body);
             var tag: any = req.body;
-            var successOrNot: boolean = await this.Tag.createTag(res, tag);
-            console.log("in create route:", successOrNot);
-            res.status(200).send(successOrNot);
+            this.Tag.createTag(res, tag);
         });
 
         // get all tags
-        router.get("/tag", async (req, res) => {
+        router.get("/tag", (req, res) => {
             console.log("get all tags");
-            var tags: ITagModel[] = await this.Tag.getAllTags(res);
-            console.log("get all tags finished");
-            res.status(200).send(tags);
+            this.Tag.getAllTags(res);
         });
 
         // get tag by id
-        router.get("/tag/:tagID", async (req, res) => {
+        router.get("/tag/:tagID", (req, res) => {
             var tagId: number = req.params.tagID;
-            var tag: any = await this.Tag.getTagByTagID(res, tagId);
-            console.log("in get route:", tag);
-            res.status(200).send(tag);
+            console.log("get tag by tagID:", tagId);
+            this.Tag.getTagByTagID(res, tagId);
         });
 
         // update tag by tagId
-        router.put("/tag/:tagID", async (req, res) => {
+        router.put("/tag/:tagID", (req, res) => {
             var tagId: number = req.params.tagID;
             var tagBody: any = req.body;
-            var successOrNot: boolean = await this.Tag.updateTagByTagID(res, tagId, tagBody);
-            console.log("in update route:", successOrNot);
-            res.status(200).send(successOrNot);
+            console.log("update tag by tagID:", tagId);
+            this.Tag.updateTagByTagID(res, tagId, tagBody);
         });
 
         // delete tag by tagId
-        router.delete("/tag/:tagID",async (req, res) => {
+        router.delete("/tag/:tagID", (req, res) => {
             var tagId: number = req.params.tagID;
-            var adminId: number = req.params.adminID;
-            var tag: any = await this.Tag.deleteTagByTagIDByAdmin(res, adminId, tagId);
-            console.log("in delete route:", tag);
-            res.status(200).send(tag);
+            console.log("delete tag by tagID:", tagId);
+            this.Tag.deleteTagByTagID(res, tagId);
         });
     }
 }

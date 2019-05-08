@@ -25,35 +25,34 @@ class FoodieTagListRoute {
     // configure API endpoints.
     private routes(router: Router): void {
         // create TagList
-        router.post("/foodie/:userID/createTagList", async (req, res) => {
+        router.post("/tagList", async (req, res) => {
             var list: any = req.body;
-            var successOrNot: boolean = await this.TagList.createTagList(res, list);
+            var successOrNot: boolean = await this.TagList.createTagList(list);
             console.log("in create route:", successOrNot);
             res.status(200).send(successOrNot);
         });
 
         // get list by userId
-        router.get("/foodie/:userID", async (req, res) => {
+        router.get("/tagList/:userID", async (req, res) => {
             var userId: number = req.params.userID;
-            var list: any = await this.TagList.getTagListByFoodieID(res, userId);
+            var list: any = await this.TagList.getTagListByFoodieID(userId);
             console.log("in get route:", list);
             res.status(200).send(list);
         });
 
         // update list by userId
-        router.put("/foodie/:userID/editTagList", async (req, res) => {
+        router.put("/tagList/:userID", async (req, res) => {
             var userId: number = req.params.userID;
             var listBody: any = req.body;
-            var successOrNot: boolean = await this.TagList.updateTagListByFoodieID(res, userId, listBody);
+            var successOrNot: boolean = await this.TagList.updateTagListByFoodieID(userId, listBody);
             console.log("in update route:", successOrNot);
             res.status(200).send(successOrNot);
         });
 
         // delete list by userId
-        router.delete("/foodie/:userID",async (req, res) => {
-            var adminId: number = req.params.adminId;
+        router.delete("/tagList/:userID",async (req, res) => {
             var foodieId: number = req.params.foodieId;
-            var user: any = await this.TagList.deleteTagListByFoodieIDByAdmin(res, adminId, foodieId);
+            var user: any = await this.TagList.deleteTagListByFoodieIDByAdmin(foodieId);
             console.log("in delete route:", user);
             res.status(200).send(user);
         });

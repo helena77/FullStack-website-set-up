@@ -43,7 +43,7 @@ userCollection.insert(
     favoriteListID: 2
 })
 
-// create one restaurant owner
+// create three restaurant owner
 userCollection.insert(
 {
         userID: 4,
@@ -53,10 +53,28 @@ userCollection.insert(
         emailAddress: "erica@gmail.com",
 })
 
-// create one admin
 userCollection.insert(
 {
         userID: 5,
+        userName: "Eric",
+        userType: 2,
+        password: "pwdOfEric",
+        emailAddress: "eric@gmail.com",
+})
+
+userCollection.insert(
+{
+        userID: 6,
+        userName: "Jack",
+        userType: 2,
+        password: "pwdOfJack",
+        emailAddress: "jack@gmail.com",
+})
+
+// create one admin
+userCollection.insert(
+{
+        userID: 7,
         userName: "Xing",
         userType: 3,
         password: "pwd",
