@@ -12,6 +12,7 @@ import { CollectionService } from '../services/collection.service';
 export class RestaurantComponent implements OnInit {
 
     detail: IRestaurantModel;
+    restaurantAvatar: string;
 
     addCollectionClicked: boolean;
     addCollectionSuccessOrNot: boolean;
@@ -28,8 +29,11 @@ export class RestaurantComponent implements OnInit {
         this.restaurantService.getByID(this.route.snapshot.params.rID).subscribe(
             res => {
                 this.detail = res;
+                this.restaurantAvatar = res.restaurantAvtar;
                 console.log(this.detail);}
         );
+
+        console.log("restaurant info: ", this.detail);
     }
     
     addToCollection(){

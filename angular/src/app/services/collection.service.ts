@@ -9,7 +9,7 @@ import { IFavoriteListModel } from '../interfaces/IFavoriteListModel';
 })
 export class CollectionService {
   private favoriateListUrl = 'http://localhost:8080/favoriteList/';
-  private fListByUserIdUrl = 'http://localhost:8080/favoriteList/'
+  private fListByUserIdUrl = 'http://localhost:8080/favoriteList/';
   constructor(private http: HttpClient) { }
 
 	// get collection by favoriteListID
@@ -27,6 +27,8 @@ export class CollectionService {
 	updateCollectionByListID(listID: number, newList: object) {
 		const url = this.favoriateListUrl + listID;
 		return this.http.put(url, newList).subscribe(res => console.log('updated'));
+	}
+	
 	// add restaurant to the collection of the user
 	addCollection(userID: number, restaurantID: number): Observable<boolean> {
 		let successOrNot = new Subject<boolean>();
