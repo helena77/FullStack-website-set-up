@@ -21,10 +21,6 @@ export class CollectionService {
 	updateCollectionByListID(listID: number, newList: object) {
 		const url = this.favoriateListUrl + listID;
 		return this.http.put(url, newList).subscribe(res => console.log('updated'));
-	}
-<<<<<<< HEAD
-=======
-
 	// add restaurant to the collection of the user
 	addCollection(userID: number, restaurantID: number): Observable<boolean> {
 		let successOrNot = new Subject<boolean>();
@@ -76,5 +72,4 @@ export class CollectionService {
 		return successOrNot.asObservable();
 	}
 
->>>>>>> bf377ae9f51ebf54f5fbaf3002fbee785fda5381
 }

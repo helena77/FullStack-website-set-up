@@ -42,7 +42,6 @@ export class ProfileComponent implements OnInit {
               }
 
   ngOnInit() {
-<<<<<<< HEAD
     if (this.route.snapshot.queryParams.userID) {
       console.log(this.route.snapshot.queryParams.userID);
       this.userID = this.route.snapshot.queryParams.userID;
@@ -90,9 +89,3 @@ export class ProfileComponent implements OnInit {
 }
 
 
-=======
-    
-  }
-}
-
->>>>>>> bf377ae9f51ebf54f5fbaf3002fbee785fda5381
