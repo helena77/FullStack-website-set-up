@@ -1,8 +1,8 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { ProfileService } from '../services/profile.service';
 import { Router  , ActivatedRoute } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
 import { NumberValueAccessor } from '@angular/forms/src/directives';
+import { AuthService } from '../services/auth.service';
 // import { MessageService } from '../message.service';
 import { Observable } from 'rxjs';
 import { CollectionService } from '../services/collection.service';
@@ -17,25 +17,32 @@ import { TagSelectionService } from '../services/tag-selection.service';
 })
 export class ProfileComponent implements OnInit {
   users: Object;
-  id: Number;
-  userName: string;
-  email: string;
+  userID: number;
+  userName:string;
+  emailAddress:string;
   favoriteListID: number;
   favoriateList: IFavoriteListModel;
   restaurantIDList: number[] = [];
-  level: number = 0;
   tagList: any;
   priorityList: number[] = [];
   tagPriList: string[] = [];
   
-  constructor(private data: ProfileService,
+  constructor(private auth: AuthService,
+              private data: ProfileService,
               private route: ActivatedRoute,
-              private authService: AuthService,
               private collectionservice: CollectionService,
               private recommendationListService: RecommendationListService,
-              private tagSelectionService: TagSelectionService) { }
+              private tagSelectionService: TagSelectionService) {
+                this.auth.getSession().subscribe(data => {
+                  this.userID = data.userID;
+                  this.emailAddress = data.emailAddress;
+                  this.userName = data.userName; 
+                  console.log("profile: " + JSON.stringify(data)); 
+                })
+              }
 
   ngOnInit() {
+<<<<<<< HEAD
     if (this.route.snapshot.queryParams.userID) {
       console.log(this.route.snapshot.queryParams.userID);
       this.userID = this.route.snapshot.queryParams.userID;
@@ -83,3 +90,9 @@ export class ProfileComponent implements OnInit {
 }
 
 
+=======
+    
+  }
+}
+
+>>>>>>> bf377ae9f51ebf54f5fbaf3002fbee785fda5381
