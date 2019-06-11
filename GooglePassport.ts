@@ -35,10 +35,10 @@ class GooglePassport {
                     userType: 1,
                 };
 
-                newReq.get("https://foodhunter.azurewebsites.net/login/" + newUser.emailAddress,{},(err, resp, body)=>{
+                newReq.get("http://localhost:8080/login/" + newUser.emailAddress,{},(err, resp, body)=>{
                     if(body == "null"){
                         console.log("not find, now create a user"); 
-                        newReq.post("https://foodhunter.azurewebsites.net/foodie",
+                        newReq.post("http://localhost:8080/foodie",
                         {
                             json: newUser
                         },

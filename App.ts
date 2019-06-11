@@ -17,14 +17,15 @@ import { RecommendationList } from './route/RecommendationListRoute';
 import { Router } from "express-serve-static-core";
 import GooglePassportObj from './GooglePassport';
 import { DataAccess } from './DataAccess';
-let mongooseConnection = DataAccess.mongooseConnection;
-let cookieParser = require('cookie-parser');
-let expressSession = require('express-session');
-let mongoStore = require('connect-mongo')({ session: expressSession });
-let mongoose = require('mongoose');
+//let mongooseConnection = DataAccess.mongooseConnection;
+//let cookieParser = require('cookie-parser');
+//let expressSession = require('express-session');
+//let mongoStore = require('connect-mongo')({ session: expressSession });
+//let mongoose = require('mongoose');
+let session = require('express-session');
 let passport = require('passport');
 let newReq = require('request');
-
+let logout = require('express-passport-logout');
 var allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -57,10 +58,10 @@ class App {
             res.header('Access-Control-Allow-Headers', 'Content-Type');
             next();
         });
-
+        this.expressApp.use(session({ secret: 'keyboard cat' }));
         //////////////////////////////////////////////////
         //*************** for session ******************/
-        this.expressApp.use(cookieParser());
+        /*this.expressApp.use(cookieParser());
         this.expressApp.use(expressSession({
             key: 'user_sid',
             secret: 'keyboard cat',
@@ -70,7 +71,7 @@ class App {
                 db: mongooseConnection.db,
                 collection: 'sessions'
             })
-        }));
+        }));*/
 
         this.expressApp.use(passport.initialize());
         this.expressApp.use(passport.session());
@@ -105,20 +106,22 @@ class App {
         );
 
         router.get('/auth/user', this.validateAuth, (req, res) => {
-            console.log("req.cookies.user_sid: " + req.cookies.user_sid)
-            if (req.cookies.user_sid) {
-                var email = this.googlePassportObj.email;
-                newReq.get(req.protocol + "://" + req.get('host') + "/login/" + email, {}, (err, resp, body) => {
-                    console.log('/auth/user: ' + body);
-                    res.send(body);
-                });
-            }
+            var email = this.googlePassportObj.email;
+            newReq.get(req.protocol+"://"+req.get('host') + "/login/" + email,{},(err, resp, body)=>{
+                res.send(body);
+            });
         });
         
-        router.get('/logout', (req, res) => {
+        //google will manage the session for us, but we cannot do that. 
+        /*router.get('/logout', (req, res) => {
             console.log("clear cookie");
             res.clearCookie(req.cookies.user_sid);
             this.googlePassportObj.email = ""; 
+            return res.redirect("/#/login");
+        })*/
+        router.get('/logout', (req, res) => {
+            this.googlePassportObj.email = ""; 
+            logout();
             return res.redirect("/#/login");
         })
 
