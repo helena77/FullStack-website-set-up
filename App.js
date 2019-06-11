@@ -14,11 +14,6 @@ var RestaurantTagListRoute_1 = require("./route/RestaurantTagListRoute");
 var ApplicationFormRoute_1 = require("./route/ApplicationFormRoute");
 var RecommendationListRoute_1 = require("./route/RecommendationListRoute");
 var GooglePassport_1 = require("./GooglePassport");
-//let mongooseConnection = DataAccess.mongooseConnection;
-//let cookieParser = require('cookie-parser');
-//let expressSession = require('express-session');
-//let mongoStore = require('connect-mongo')({ session: expressSession });
-//let mongoose = require('mongoose');
 var session = require('express-session');
 var passport = require('passport');
 var newReq = require('request');
@@ -50,26 +45,10 @@ var App = /** @class */ (function () {
             next();
         });
         this.expressApp.use(session({ secret: 'keyboard cat' }));
-        //////////////////////////////////////////////////
-        //*************** for session ******************/
-        /*this.expressApp.use(cookieParser());
-        this.expressApp.use(expressSession({
-            key: 'user_sid',
-            secret: 'keyboard cat',
-            cookie: { maxAge: 1 * 60 * 1000 },
-            store: new mongoStore({
-                url: DataAccess.DB_CONNECTION_STRING,
-                db: mongooseConnection.db,
-                collection: 'sessions'
-            })
-        }));*/
         this.expressApp.use(passport.initialize());
         this.expressApp.use(passport.session());
     };
-    //////////////////////////////////////////////////
-    //*************** google login ******************/
     App.prototype.validateAuth = function (req, res, next) {
-        // && req.cookies.user_sid  => not allow the user log in two different account in the same browser
         if (req.isAuthenticated()) {
             console.log("user is authenticated");
             console.log("validate user id: " + req.user.id);
@@ -91,13 +70,6 @@ var App = /** @class */ (function () {
                 res.send(body);
             });
         });
-        //google will manage the session for us, but we cannot do that. 
-        /*router.get('/logout', (req, res) => {
-            console.log("clear cookie");
-            res.clearCookie(req.cookies.user_sid);
-            this.googlePassportObj.email = "";
-            return res.redirect("/#/login");
-        })*/
         router.get('/logout', function (req, res) {
             _this.googlePassportObj.email = "";
             logout();
