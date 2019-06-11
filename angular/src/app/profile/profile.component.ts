@@ -12,7 +12,7 @@ import { TagSelectionService } from '../services/tag-selection.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  userID: number = 12;
+  userID: number = 2;
   userName:string = "Helena";
   emailAddress:string = "helenawang77@gmail.com";
   favoriteListID: number;
@@ -55,8 +55,9 @@ export class ProfileComponent implements OnInit {
         });
     });
 
-    this.profileService.getProfileByFoodieID(77).subscribe(foodieinfo => {
+    this.profileService.getProfileByFoodieID(2).subscribe(foodieinfo => {
       this.avatarPicture = foodieinfo.avatar;
+      console.log(this.avatarPicture);
     });
   }
 }

@@ -3,6 +3,8 @@ import { IRestaurantModel } from '../interfaces/IRestaurantModel';
 import { RecommendationListService } from '../services/recommendation-list.service';
 import { RestaurantService } from '../services/restaurant.service';
 import { filter } from 'rxjs/operators';
+import { AlgorithmService } from '../services/algorithm.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recommendation-list',
@@ -13,17 +15,22 @@ export class RecommendationListComponent implements OnInit {
   private restaurantIdList: number[];
   public recommendationList: IRestaurantModel[] = [];
   private userId: number = 3;
-
+  private score: number[];
+  public message = 'what the fuck';
   @Input('isChange') isChange: boolean = false;
-  @Input('newList') newList: any = [];
+  // @Input('newList') newList: any = [];
+  public newList: any = [];
 
   constructor(private recommendationListService: RecommendationListService,
-              private restaurantService: RestaurantService) { }
+              private restaurantService: RestaurantService,
+              private algorithmService: AlgorithmService) { }
 
   ngOnInit() {
+    console.log("Here is the submit:", this.isChange);
+    console.log("Here is the list got from tagSel:", this.newList);
     if (!this.isChange) {
       console.log(this.isChange);
-      console.log(this.newList);
+      // console.log('new list inside the recommendation component: ', this.newList);
       this.recommendationListService.getTagListId(this.userId).subscribe(
         res => {
           console.log(res);
@@ -44,6 +51,9 @@ export class RecommendationListComponent implements OnInit {
         });
     } else {
       // algo
+      this.score = this.algorithmService.getRecommandationByTaglist(this.newList);
+      console.log('inside the else: ', this.score);
+
     }
   }
 
