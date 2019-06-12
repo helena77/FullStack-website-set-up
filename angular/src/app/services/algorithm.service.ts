@@ -19,7 +19,7 @@ export class AlgorithmService {
               private restaurantService: RestaurantService) {
     this.getAllRtag().subscribe(res => {
       this.rtags = res;
-      this.score = new Array(this.rtags.length).fill(0);
+      this.score = new Array(res.length).fill(0);
     });
   }
 
