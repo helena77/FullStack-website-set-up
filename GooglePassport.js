@@ -26,10 +26,10 @@ var GooglePassport = /** @class */ (function () {
                     password: "null",
                     userType: 1
                 };
-                newReq.get("http://localhost:8080/login/" + newUser.emailAddress, {}, function (err, resp, body) {
+                newReq.get("https://foodhunter.azurewebsites.net/login/" + newUser.emailAddress, {}, function (err, resp, body) {
                     if (body == "null") {
                         console.log("not find, now create a user");
-                        newReq.post("http://localhost:8080/foodie", {
+                        newReq.post("https://foodhunter.azurewebsites.net/foodie", {
                             json: newUser
                         }, function (err1, resp1, body1) {
                             console.log("create: " + resp1.statusCode);
