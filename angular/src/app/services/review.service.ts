@@ -59,7 +59,7 @@ export class ReviewService {
 				}),
 				catchError((err, caught$) => {
 					times++;
-					console.log('retry times ${times}');
+					console.log(`retry times ${times}: ${err.message}`);
 					return caught$;
 				})
 			)
