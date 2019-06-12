@@ -20,4 +20,12 @@ export class RecommendationListService {
     return this.http.get(this.recommendationListUrl + tagListId);
   }
 
+  createRecommendationList(tagListId) {
+
+  }
+
+  // getTagListByUserID(userId) {
+  //   return this.http.get(this.tagListUrl + userId)
+  // }
+
 }

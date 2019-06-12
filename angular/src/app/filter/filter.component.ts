@@ -4,26 +4,24 @@ import { Router } from '@angular/router';
 import { AlgorithmService } from '../services/algorithm.service';
 import { RestaurantService } from '../services/restaurant.service';
 import { IRestaurantModel } from '../interfaces/IRestaurantModel';
-const NUMBER_OF_RESTAURANTS = 3; // return top 3 restaurants
+
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent implements OnInit {
-  //private searchUrl = 'search';
-  //private url = 'filter';
   public isCollapse: boolean;
   clickCount: number;
-  isSubmit: boolean = false;
+  isSubmit = false;
   tagList: any;
-  public newList = [];
-  public score: number[];
-  public topThreeRestaurant: IRestaurantModel[] = [];
-  private topThreeRestaurantID = [-1, -1, -1];
+  public newList = [1, 2, 3, 4, 5, 6, 7, 8];
+  public topThreeRestaurantId: number[] = [];
+  public name = 'data from parent';
+
   constructor(private tagSelectionService: TagSelectionService,
-              private router: Router, private algorithmService: AlgorithmService,
-              private restaurantService: RestaurantService) {
+              private router: Router,
+              private algorithmService: AlgorithmService) {
   }
 
   ngOnInit() {
@@ -33,6 +31,9 @@ export class FilterComponent implements OnInit {
           this.isCollapse = false;
           this.clickCount = 0;
         });
+      // this.score = this.algorithmService.getRecommandationByTaglist(this.newList);
+      // console.log(this.score);
+      // this.getTopThreeRestaurants();
   }
 
   onClick() {
@@ -48,52 +49,15 @@ export class FilterComponent implements OnInit {
     this.isSubmit = true;
     console.log(f.value);
     // tslint:disable-next-line:forin
+    this.newList = [];
     for (const key in f.value) {
       const value = f.value[key];
       const num = +value;
       this.newList.push(num);
     }
-    console.log(this.newList);
-    this.score = this.algorithmService.getRecommandationByTaglist(this.newList);
-    console.log(this.score);
-    this.getTopThreeRestaurants();
+    console.log('inside the onsubmit', this.newList);
+    this.topThreeRestaurantId = this.algorithmService.getRecommandationByTaglist(this.newList);
+    console.log("top three restaurant: ", this.topThreeRestaurantId);
   }
 
-  getTopThreeRestaurants() {
-    let i;
-    let first = -1;
-    let second = -1;
-    let third = -1;
-    console.log('inside the top 3: ', this.score);
-    // if the current element is greater than first
-    for ( i = 0; i < this.score.length; i++) {
-      if (this.score[i] > first) {
-        third = second;
-        second = first;
-        first = this.score[i];
-      } 
-      // if score[i] is in between first and second then update second
-      else if (this.score[i] > second) {
-        third = second;
-        second = this.score[i];
-      }
-      else if (this.score[i] > third) {
-        third = this.score[i];
-      }
-    }
-    this.topThreeRestaurantID[0] = this.score.indexOf(first) + 1;
-    this.topThreeRestaurantID[1] = this.score.indexOf(second) + 1;
-    this.topThreeRestaurantID[2] = this.score.indexOf(third) + 1;
-    console.log('top three restaurant ID: ', this.topThreeRestaurantID);
-    console.log('top three restaurant ID: ' + first + " " + second + " " + third);
-    // get the information of the top three restaurants
-    for (let j = 0; j < NUMBER_OF_RESTAURANTS; j++) {
-      this.restaurantService.getByID(this.topThreeRestaurantID[j]).subscribe(
-        result => {
-          this.topThreeRestaurant.push(result);
-        }
-      );
-    }
-    console.log("top three restaurant: ", this.topThreeRestaurant);
-  }
 }
