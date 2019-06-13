@@ -4,7 +4,7 @@
   "description": "",
   "main": "AppServer.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/TestReview.js",
     "start": "node AppServer.js"
   },
   "author": "pandaman",
