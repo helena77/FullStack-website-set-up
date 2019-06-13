@@ -25,7 +25,7 @@ var uuid = require('node-uuid');
 class App {
 
     public expressApp: express.Application;
-    public googlePassportObj:GooglePassportObj;
+    public googlePassportObj: GooglePassportObj;
     //Run configuration methods on the Express instance.
     constructor() {
         this.expressApp = express();
@@ -36,7 +36,7 @@ class App {
 
     // configure Express middleware.
     private middleware(): void {
-        let allowCrossDomain = function(req, res, next) {
+        let allowCrossDomain = function (req, res, next) {
             res.header('Access-Control-Allow-Origin', "*");
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
             res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -45,15 +45,18 @@ class App {
         this.expressApp.use(logger("dev"));
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-        this.expressApp.use(session({ 
+        this.expressApp.use(session({
             secret: 'keyboard cat',
-            genid:function () {
+            genid: function () {
                 return uuid.v4();
             },
+            resave: false,
+            name: "fd",
+            saveUninitialized: true,
             cookie: {
                 expires: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)),
-                maxAge:7 * 24 * 60 * 60 * 1000
-            }, 
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            },
         }));
         this.expressApp.use(allowCrossDomain);
         this.expressApp.use(passport.initialize());
@@ -62,13 +65,13 @@ class App {
 
     //////////////////////////////////////////////////
     //*************** google login ******************/
-    private validateAuth(req, res, next):void {
+    private validateAuth(req, res, next): void {
         // && req.cookies.user_sid  => not allow the user log in two different account in the same browser
-        if (req.isAuthenticated()) { 
-            console.log("user is authenticated"); 
+        if (req.isAuthenticated()) {
+            console.log("user is authenticated");
             console.log("validate user id: " + req.user.id);
             console.log("validate email: " + req.user.emails[0].value);
-            return next(); 
+            return next();
         }
         console.log("user is not authenticated");
         res.redirect('/');
@@ -90,33 +93,33 @@ class App {
 
         router.get('/auth/user', this.validateAuth, (req, res) => {
             var email = this.googlePassportObj.email;
-            newReq.get(req.protocol+"://"+req.get('host') + "/login/" + email,{},(err, resp, body)=>{
+            newReq.get(req.protocol + "://" + req.get('host') + "/login/" + email, {}, (err, resp, body) => {
                 res.send(body);
             });
         });
 
         router.get('/logout', (req, res) => {
-            this.googlePassportObj.email = ""; 
+            this.googlePassportObj.email = "";
             logout();
             return res.redirect("/#/login");
         })
 
         router.get('/loggedIn', (req, res) => {
-            if(this.googlePassportObj.email != null && this.googlePassportObj.email != ""){
+            if (this.googlePassportObj.email != null && this.googlePassportObj.email != "") {
                 res.send("true");
-            }else{
-                res.send("false"); 
+            } else {
+                res.send("false");
             }
         })
 
-    //////////////////////////////////////////////////
-    //*************** google login end ***************/
+        //////////////////////////////////////////////////
+        //*************** google login end ***************/
         // add routes
         this.addRoutes(router);
         this.expressApp.use('/', router);
-        this.expressApp.use('/', express.static(__dirname+'/angularDist'));     
-  }    
-    private addRoutes(router: express.Router): void{
+        this.expressApp.use('/', express.static(__dirname + '/angularDist'));
+    }
+    private addRoutes(router: express.Router): void {
         var review = new Review();
         review.registerRoutes(router);
         var favoriteList = new FavoriteList();
@@ -145,4 +148,4 @@ class App {
 
 }
 
-export {App};
+export { App };
