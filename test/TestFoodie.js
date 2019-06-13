@@ -22,12 +22,10 @@ describe('Test getting one foodie', function(){
         });
     
     it('Should return only one foodie object', function (){
-        expect(response).to.have.status(200);
         expect(responseBody).to.be.an("object");
     });
 
     it('Should have propertys', function (){
-        expect(response).to.have.status(200);
 		expect(responseBody).to.have.property('tagListID');
 		expect(responseBody).to.have.property('userName');
 		expect(responseBody).to.have.property('password');

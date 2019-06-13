@@ -23,12 +23,10 @@ describe('Test tag list', function(){
         });
     
     it('Should return only one tag object', function (){
-        expect(response).to.have.status(200);
         expect(responseBody).to.be.an("object");
     });
 
     it('Should have propertys', function (){
-        expect(response).to.have.status(200);
         expect(responseBody).to.have.property('_id');
         expect(responseBody, 'Property: tagID').to.have.property('tagID').that.is.a('number');
         expect(responseBody, 'Property: tagName').to.have.property('tagName').that.is.a('string');
