@@ -18,7 +18,6 @@ var GooglePassport_1 = require("./GooglePassport");
 var passport = require('passport');
 var newReq = require('request');
 var logout = require('express-passport-logout');
-var uuid = require('node-uuid');
 // creates and configures an ExpressJS web server.
 var App = /** @class */ (function () {
     //Run configuration methods on the Express instance.
@@ -40,17 +39,7 @@ var App = /** @class */ (function () {
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
         this.expressApp.use(session({
-            secret: 'keyboard cat',
-            genid: function () {
-                return uuid.v4();
-            },
-            resave: false,
-            name: "fd",
-            saveUninitialized: true,
-            cookie: {
-                expires: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)),
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            }
+            secret: 'keyboard cat'
         }));
         this.expressApp.use(allowCrossDomain);
         this.expressApp.use(passport.initialize());

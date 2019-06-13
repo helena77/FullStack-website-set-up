@@ -19,7 +19,6 @@ import GooglePassportObj from './GooglePassport';
 let passport = require('passport');
 let newReq = require('request');
 let logout = require('express-passport-logout');
-var uuid = require('node-uuid');
 
 // creates and configures an ExpressJS web server.
 class App {
@@ -47,16 +46,6 @@ class App {
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
         this.expressApp.use(session({
             secret: 'keyboard cat',
-            genid: function () {
-                return uuid.v4();
-            },
-            resave: false,
-            name: "fd",
-            saveUninitialized: true,
-            cookie: {
-                expires: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)),
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            },
         }));
         this.expressApp.use(allowCrossDomain);
         this.expressApp.use(passport.initialize());
