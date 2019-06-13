@@ -38,7 +38,13 @@ var App = /** @class */ (function () {
         this.expressApp.use(logger("dev"));
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-        this.expressApp.use(session({ secret: 'keyboard cat' }));
+        this.expressApp.use(session({
+            secret: 'keyboard cat',
+            cookie: {
+                expires: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)),
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            }
+        }));
         this.expressApp.use(allowCrossDomain);
         this.expressApp.use(passport.initialize());
         this.expressApp.use(passport.session());
