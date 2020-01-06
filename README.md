@@ -1,4 +1,5 @@
-# FoodHunter
+# Project Name
+FoodHunter
 
 # Description
 This website recommends restaurants to users based on their preference priority.
