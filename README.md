@@ -1,8 +1,5 @@
 # FoodHunter
 
-# URL
-https://foodhunterapp.azurewebsites.net/
-
 # Description
 This website recommends restaurants to users based on their preference priority.
 
