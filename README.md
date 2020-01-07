@@ -9,3 +9,7 @@ Users could get different recommendations based on their different preference ra
 
 # Weakness
 The whole website is not yet complete. Because of the class team work, time is limited, so we only implemented some important features.
+
+# My responsiblity
+features: recommendationList, tags, user
+all html part of angular
