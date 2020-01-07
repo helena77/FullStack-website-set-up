@@ -12,4 +12,4 @@ The whole website is not yet complete. Because of the class team work, time is l
 
 # My responsiblity
 - features(fullstack): recommendationList, tags, user
-- all html part of angular
+- all html parts of angular
